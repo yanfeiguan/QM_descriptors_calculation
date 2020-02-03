@@ -44,6 +44,8 @@ parser.add_argument('--DFT_folder', type=str, default='DFT',
                     help='folder for DFT calculation')
 parser.add_argument('--DFT_theory', type=str, default='b3lyp/def2svp',
                     help='level of theory for the DFT calculation')
+parser.add_argument('--DFT_n_procs', type=int, default=20,
+                    help='number of process for DFT calculations')
 
 args = parser.parse_args()
 args.ismiles = '100k.csv'
@@ -54,6 +56,7 @@ logger = create_logger(name=name)
 df = pd.read_csv(args.ismiles, index_col=0)
 
 # conformer searching
+
 logger.info('starting MMFF conformer searching')
 supp = (x for x in df[['id', 'smiles']].values)
 conf_sdfs = csearch(supp, len(df), args, logger)
@@ -80,9 +83,12 @@ for conf_sdf in conf_sdfs:
 if not os.path.isdir(args.DFT_folder):
     os.mkdir(args.DFT_folder)
 
+opt_sdfs = ['CHEMBL231079_opt.sdf', 'CHEMBL1521196_opt.sdf']
+
 for opt_sdf in opt_sdfs:
-    try:
-        shutil.copyfile(os.path.join(args.xtb_folder, opt_sdf),
-                        os.path.join(args.DFT_folder, opt_sdf))
-        dft_log = dft_scf(args.DFT_folder, opt_sdf, G16_PATH, args.DFT_theory, logger)
+    #try:
+    shutil.copyfile(os.path.join(args.xtb_folder, opt_sdf),
+                    os.path.join(args.DFT_folder, opt_sdf))
+    dft_log = dft_scf(args.DFT_folder, opt_sdf, G16_PATH, args.DFT_theory, args.DFT_n_procs,
+                      logger)
 
