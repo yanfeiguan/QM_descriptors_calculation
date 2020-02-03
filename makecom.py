@@ -1,7 +1,7 @@
 import os, sys,re
 sys.path.append('/home/yanfei/bin')
 
-from file_parser_askcos import xyz2com
+from file_parser import xyz2com
 from tqdm import tqdm
 
 xyzs = [x for x in os.listdir('.') if 'xyz' in x]
