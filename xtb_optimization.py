@@ -14,7 +14,7 @@ def xtb_optimization(folder, sdf, xtb_path, logger):
     file_name = os.path.splitext(basename)[0]
 
     xtb_command = os.path.join(xtb_path, 'xtb')
-    with open(f'{file_name}_xtb_opt.log', 'w') as out:
+    with open('{}_xtb_opt.log'.format(file_name), 'w') as out:
         print(xtb_command, '{}.sdf'.format(file_name))
         subprocess.call([xtb_command, '{}.sdf'.format(file_name), '-opt'],
                         stdout=out, stderr=out)

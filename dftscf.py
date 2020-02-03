@@ -38,14 +38,16 @@ def dft_scf(folder, sdf, g16_path, level_of_theory, n_procs, logger):
             head = '%chk={}.chk\n%nprocshared=20\n# b3lyp/def2svp scf=(maxcycle=512, xqc) ' \
                    'pop=(full,mbs,hirshfeld,nbo6read)\n'.format(file_name, n_procs)
 
-        comfile = os.path.join(jobtype, file_name + '.gjf')
-        logfile = os.path.join(jobtype, file_name + '.log')
 
-        xyz2com(xyz, head=head, comfile=comfile, charge=charge, mult=mult, footer='$NBO BNDIDX $END\n')
         os.chdir(jobtype)
+        comfile = file_name + '.gjf'
+        xyz2com(xyz, head=head, comfile=comfile, charge=charge, mult=mult, footer='$NBO BNDIDX $END\n')
 
-        with open(logfile, 'w') as out:
-            subprocess.call([g16_command, '<', comfile], stdout=out, stderr=out)
+        logfile = file_name + '.log'
+        outfile = file_name + '.out'
+        with open(outfile, 'w') as out:
+            subprocess.run('{} < {} >> {}'.format(g16_command, comfile, logfile), shell=True, stdout=out, stderr=out)
+        os.chdir(pwd)
 
     os.remove(sdf)
 
