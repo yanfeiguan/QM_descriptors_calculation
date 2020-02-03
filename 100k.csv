@@ -1,0 +1,6 @@
+id,smiles
+0,CHEMBL231079,Cc1ccn2cc(-c3ccc(OCCCN4CCN(c5cccc(Cl)c5Cl)CC4)cc3)nc2c1
+1,CHEMBL1521196,Cc1ccc(C=C2C(=O)c3ccccc3C2=O)s1
+2,CHEMBL3318882,Nc1ncc(-c2ccncc2)c(-c2ccoc2)n1
+3,CHEMBL1971806,CCOC(=O)[C@@]1(C)CC(O)C(=O)N1C
+4,CHEMBL2235740,COc1ccc(/N=N/c2cc(/C=N/c3ccccc3C)c(O)c(OC)c2)cc1
