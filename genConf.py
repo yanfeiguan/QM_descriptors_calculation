@@ -187,14 +187,14 @@ def csearch(supp, total, args, logger):
                         mol.SetProp('_Name', mol_id)
                         mol.SetProp('ConfId', str(lowest_id))
                         mol.SetProp('ConfEnergies', str(lowest_en) + ' kcal/mol')
-                        writer = Chem.SDWriter(os.path.join(args.MMFF_conf_folder, f'{mol_id}.sdf'))
+                        writer = Chem.SDWriter(os.path.join(args.MMFF_conf_folder, '{}.sdf'.format(mol_id)))
                         writer.write(mol, confId=lowest_id)
                         conformers_found = len(ids)
-                        logger.info(f'conformer searching for {mol_id} completed: '
-                                    f'{conformers_found} conformers found, keep the lowest one')
-                        conf_sdfs.append(f'{mol_id}.sdf')
+                        logger.info('conformer searching for {} completed: '
+                                    '{} conformers found, keep the lowest one'.format(mol_id, conformers_found))
+                        conf_sdfs.append('{}.sdf'.format(mol_id))
                     else:
-                        logger.info(f'conformer searching for {mol_id} failed.')
+                        logger.info('conformer searching for {} failed.'.format(mol_id))
                         pass
 
                     # add new task
