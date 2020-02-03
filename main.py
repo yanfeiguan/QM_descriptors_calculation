@@ -8,7 +8,7 @@ from utils import create_logger
 from genConf import csearch
 from xtb_optimization import xtb_optimization
 
-XTB_PATH = '/Users/yanfei/bin/xtb_exe/bin'
+XTB_PATH = '/data/yanfei/software/xtb_exe/bin'
 G16_PATH = ''
 
 parser = ArgumentParser()
