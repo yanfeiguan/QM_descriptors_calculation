@@ -61,6 +61,6 @@ if not os.path.isdir(args.xtb_folder):
     os.mkdir(args.xtb_folder)
 
 for conf_sdf in conf_sdfs:
-    shutil.move(os.path.join(args.MMFF_conf_folder, conf_sdf),
-                os.path.join(args.xtb_folder, conf_sdf))
+    shutil.copyfile(os.path.join(args.MMFF_conf_folder, conf_sdf),
+                    os.path.join(args.xtb_folder, conf_sdf))
     xtb_optimization(os.path.join(args.xtb_folder, conf_sdf), XTB_PATH, logger)
