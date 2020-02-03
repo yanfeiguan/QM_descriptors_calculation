@@ -9,7 +9,7 @@ from genConf import csearch
 from xtb_optimization import xtb_optimization
 from dftscf import dft_scf
 
-XTB_PATH = '/Users/yanfei/bin/xtb_exe/bin'
+XTB_PATH = '/data/yanfei/software/xtb_exe/bin'
 G16_PATH = ''
 
 parser = ArgumentParser()

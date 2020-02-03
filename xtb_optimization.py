@@ -8,7 +8,11 @@ def xtb_optimization(folder, sdf, xtb_path, logger):
     basename = os.path.basename(sdf)
 
     pwd = os.getcwd()
+<<<<<<< HEAD
     os.chdir(folder)
+=======
+    os.chdir(dirname)
+>>>>>>> origin/master
 
     file_name = os.path.splitext(basename)[0]
 
@@ -23,4 +27,4 @@ def xtb_optimization(folder, sdf, xtb_path, logger):
     os.chdir(pwd)
     return '{}_opt.sdf'.format(file_name)
 
-
+    os.chdir(pwd)
