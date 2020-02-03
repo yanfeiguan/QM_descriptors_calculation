@@ -9,8 +9,8 @@ from genConf import csearch
 from xtb_optimization import xtb_optimization
 from dftscf import dft_scf
 
-XTB_PATH = '/data/yanfei/software/xtb_exe/bin'
-G16_PATH = ''
+XTB_PATH = '/home/yanfeig/software/xtb_exe/bin'
+G16_PATH = '/opt/g16'
 
 parser = ArgumentParser()
 parser.add_argument('--ismiles', type=str, required=False,
