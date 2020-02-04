@@ -54,5 +54,15 @@ respectively.
 The QM descriptors from DFT calculations will be parsed automatically and saved as a dataframe in the 
 .pickle file specified by '--output' argument.
 
+### Use on the HPC
+See submit.sh for an example of submitting scripts. The following parameters in the 
+submit.sh need to be replaced:
+
+    $CONDA_PYTHON_PATH: python path in your conda environment, e.g.: /home/yanfeig/miniconda3/envs/QM_descriptors/bin
+    $NBOPATH: path to the NBO bin folder, e.g.: /home/yanfeig:/home/yanfeig/nbo6/bin
+    $CONDA_PACKAGE_PATH: package path in your conda environment, e.g.: /home/yanfeig/miniconda3/envs/QM_descriptors/lib/python3.7/site-packages
+    $G16ROOG: path to the G16 root
+    $SCRATCH_FOLDER_G16: Scratch folder holding G16 calculation 
+
 ## Contributors
 Yanfei Guan, Duminda Ranasinghe, Oscar Wu

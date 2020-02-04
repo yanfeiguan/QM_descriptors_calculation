@@ -23,5 +23,3 @@ def xtb_optimization(folder, sdf, xtb_path, logger):
 
     os.chdir(pwd)
     return '{}_opt.sdf'.format(file_name)
-
-    os.chdir(pwd)

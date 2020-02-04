@@ -1,8 +1,7 @@
 #!/bin/bash
-#$ -N Ezlopitant
+#$ -N test
 #$ -l long
 #$ -l h_rt=120:00:00
-#$ -l h="node70|node71|node72|node78|node78|node80|node82|node83|node84|node88|node89"
 ##$ -l harpertown
 #$ -m ae
 #$ -pe singlenode  24
@@ -10,11 +9,11 @@
 #$ -o out.txt
 #$ -e err.txt
 
-PATH=/home/yanfeig/miniconda3/envs/QM_descriptors/bin:$PATH:/home/yanfeig:/home/yanfeig/nbo6/bin
-PYTHONPATH=/home/yanfeig/miniconda3/envs/QM_descriptors/lib/python3.7/site-packages:$PYTHONPATH
+PATH=$CONDA_PYTHON_PATH:$PATH:/home/yanfeig:$NBOPATH
+PYTHONPATH=$CONDA_PACKAGE_PATH:$PYTHONPATH
 
-g16root=/opt
-GAUSS_SCRDIR=/scratch/yanfeig
+g16root=$G16ROOT
+GAUSS_SCRDIR=$SCRATCH_FOLDER_G16
 export g16root GAUSS_SCRDIR
 . $g16root/g16/bsd/g16.profile
 
