@@ -18,7 +18,5 @@ GAUSS_SCRDIR=/scratch/yanfeig
 export g16root GAUSS_SCRDIR
 . $g16root/g16/bsd/g16.profile
 
-xtbroot=/home/yanfeig/software/xtb_exe/bin
-
 python main.py
 

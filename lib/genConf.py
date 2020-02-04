@@ -2,43 +2,15 @@
 from __future__ import print_function, absolute_import
 
 from multiprocessing import Process, Manager
-#######################################################################
-# Molecular conformer generator in progress
-# genConf.py -isdf file_input.sdf -osdf file_output.sdf
-# -n number_of_conformers (optional, if not specified is based
-# on the nomber of rotable bonds) -rtpre rms_threshold_pre_opt(optional)
-# -rtpost rms_threshold_post_opt(optional) -e energy_window (optional, Kcal/mol)
-# -t number_of_threads (if not specify 1)
-#######################################################################
-
-## known issues / to-do list
-## logging doesn't work properly
-## need to print out rotatable bond atoms for reference
-## comparison of printing vs. old full monte - more options
-## comparison of printing vs. GoodVibes
-## tabulation of results in addition to sdf output file
-## pythonify where possible
-## currently RMS but torsion_list would be better?
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from concurrent import futures
-import argparse, logging, os, sys, time, copy
-import gzip
-import pandas as pd
+import os
 
-# PHYSICAL CONSTANTS
-GAS_CONSTANT, PLANCK_CONSTANT, BOLTZMANN_CONSTANT, SPEED_OF_LIGHT, AVOGADRO_CONSTANT, AMU_to_KG, atmos = 8.3144621, 6.62606957e-34, 1.3806488e-23, 2.99792458e10, 6.0221415e23, 1.66053886E-27, 101.325
-# UNIT CONVERSION
-j_to_au = 4.184 * 627.509541 * 1000.0
-
-# version number
-__version__ = "1.0.1"
-
-# Formatted output to command line and log file
 
 # algorithm to generate nc conformations
-def _genConf(s, nc, rms, efilter, rmspost, return_dict, name):
+def _genConf(s, nc, max_try, rms, efilter, rmspost, return_dict, name):
     m = Chem.MolFromSmiles(s)
     if not m:
         return
@@ -49,19 +21,19 @@ def _genConf(s, nc, rms, efilter, rmspost, return_dict, name):
         return
 
     nr = int(AllChem.CalcNumRotatableBonds(m))
-    #m = Chem.AddHs(m)
-    #Chem.AssignAtomChiralTagsFromStructure(m, replaceExistingTags=True)
-    if not nc: nc = 3**nr
 
-    if not rms: rms = -1
-    ids=AllChem.EmbedMultipleConfs(m, numConfs=200, pruneRmsThresh=rms, randomSeed=1, useExpTorsionAnglePrefs=True, useBasicKnowledge=True)
+    if not nc:
+        nc = 3**nr
+
+    if not rms:
+        rms = -1
+    ids = AllChem.EmbedMultipleConfs(m, numConfs=nc, maxAttempts=max_try, pruneRmsThresh=rms,
+                                   randomSeed=1, useExpTorsionAnglePrefs=True, useBasicKnowledge=True)
 
     if len(ids)== 0:
         ids = m.AddConformer(m.GetConformer(), assignID=True)
 
     diz = []
-    diz2 = []
-    diz3 = []
 
     try:
         for id in ids:
@@ -81,7 +53,7 @@ def _genConf(s, nc, rms, efilter, rmspost, return_dict, name):
         n = m
         diz2 = diz
 
-    if rmspost != None and n.GetNumConformers() > 1:
+    if rmspost is not None and n.GetNumConformers() > 1:
         o, diz3 = postrmsd(n, diz2, rmspost)
     else:
         o = n
@@ -97,6 +69,7 @@ class genConf:
         self.s = SMILES
         self.name = chembl_id
         self.nc = args.nconf
+        self.max_nc_try = args.max_conf_try
         self.rms = args.rmspre
         self.efilter = args.E_cutoff
         self.rmspost = args.rmspost
@@ -104,7 +77,8 @@ class genConf:
         
     def __call__(self):
         self.return_dict = Manager().dict()
-        self.process = Process(target=_genConf, args=(self.s, self.nc, self.rms, self.efilter, self.rmspost, self.return_dict, self.name))
+        self.process = Process(target=_genConf, args=(self.s, self.nc, self.max_nc_try, self.rms, self.efilter,
+                                                      self.rmspost, self.return_dict, self.name))
 
         self.process.start()
         self.process.join(self.timeout)
@@ -116,6 +90,7 @@ class genConf:
 
     def terminate(self):
         self.process.terminate()
+
 
 # filter conformers based on relative energy
 def energy_filter(m, diz, efilter):
@@ -139,6 +114,7 @@ def energy_filter(m, diz, efilter):
             break
     diz2 = list(zip(ener, nid))
     return n, diz2
+
 
 # filter conformers based on geometric RMS
 def postrmsd(n, diz2, rmspost):
@@ -209,38 +185,3 @@ def csearch(supp, total, args, logger):
                     else:
                         running_pool[task.name] = executor.submit(task)
     return conf_sdfs
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Molecular conformer generator')
-    parser.add_argument('-ismiles', required=True, 
-                        help='sdf input file')
-    parser.add_argument('-osdf', required=True, 
-                        help='sdf output file')
-    parser.add_argument('-nconf', type=int, required=False, 
-                        help='number of conformers')
-    parser.add_argument('-rmspre', type=float, required=False, 
-                        help='rms threshold pre optimization')
-    parser.add_argument('-rmspost', type=float, required=False, default=0.4, 
-                        help='rms threshold post minimization')
-    parser.add_argument('-cutoff', type=float, required=False, default=10.0, 
-                        help='energy window')
-    parser.add_argument('-printproperty', action='store_true', default=True, 
-                        help='Print molecule properties (energy and rotable bond number)')
-    parser.add_argument('-threads', type=int, required=False, default=40, 
-                        help='number of threads')
-    parser.add_argument('-timeout', required=False, default=600,
-                        help = 'time out to kill sub processors')
-    args = parser.parse_args()
-
-    # Check that the input structure exists and has the correct format   
-    if os.path.exists(args.ismiles):
-        inp = args.ismiles; out = args.osdf
-        filename = os.path.splitext(inp)[0]
-
-    # Define input and outputs
-    df = pd.read_csv('100k.csv.gz')
-
-    supp = (x for x in df[['chembl_id', 'SMILES']].values)    
-    csearch(supp, args)
-
-

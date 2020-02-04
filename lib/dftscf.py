@@ -1,9 +1,8 @@
 from rdkit import Chem
 import os
-import shutil
 import subprocess
-from file_parser import mol2xyz, xyz2com
-from grab_QM_descriptors import read_log
+from .file_parser import mol2xyz, xyz2com
+from .grab_QM_descriptors import read_log
 
 
 def dft_scf(folder, sdf, g16_path, level_of_theory, n_procs, logger):
@@ -48,7 +47,7 @@ def dft_scf(folder, sdf, g16_path, level_of_theory, n_procs, logger):
         logfile = file_name + '.log'
         outfile = file_name + '.out'
         with open(outfile, 'w') as out:
-            #subprocess.run('{} < {} >> {}'.format(g16_command, comfile, logfile), shell=True, stdout=out, stderr=out)
+            subprocess.run('{} < {} >> {}'.format(g16_command, comfile, logfile), shell=True, stdout=out, stderr=out)
             QM_descriptors[jobtype] = read_log(logfile)
         os.chdir(pwd)
 
