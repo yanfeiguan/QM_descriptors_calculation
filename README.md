@@ -61,7 +61,7 @@ submit.sh need to be replaced:
     $CONDA_PYTHON_PATH: python path in your conda environment, e.g.: /home/yanfeig/miniconda3/envs/QM_descriptors/bin
     $NBOPATH: path to the NBO bin folder, e.g.: /home/yanfeig:/home/yanfeig/nbo6/bin
     $CONDA_PACKAGE_PATH: package path in your conda environment, e.g.: /home/yanfeig/miniconda3/envs/QM_descriptors/lib/python3.7/site-packages
-    $G16ROOG: path to the G16 root
+    $G16ROOT: path to the G16 root
     $SCRATCH_FOLDER_G16: Scratch folder holding G16 calculation 
 
 ## Contributors
