@@ -48,7 +48,6 @@ parser.add_argument('--DFT_n_procs', type=int, default=20,
                     help='number of process for DFT calculations')
 
 args = parser.parse_args()
-args.ismiles = '100k.csv'
 
 name = os.path.splitext(args.ismiles)[0]
 logger = create_logger(name=name)
