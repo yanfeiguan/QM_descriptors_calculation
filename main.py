@@ -62,6 +62,7 @@ supp = (x for x in df[['id', 'smiles']].values)
 conf_sdfs = csearch(supp, len(df), args, logger)
 
 # xtb optimization
+
 logger.info('starting GFN2-XTB structure optimization for the lowest MMFF conformer')
 if not os.path.isdir(args.xtb_folder):
     os.mkdir(args.xtb_folder)
@@ -85,10 +86,15 @@ if not os.path.isdir(args.DFT_folder):
 
 opt_sdfs = ['CHEMBL231079_opt.sdf', 'CHEMBL1521196_opt.sdf']
 
+qm_descriptors = []
 for opt_sdf in opt_sdfs:
     #try:
     shutil.copyfile(os.path.join(args.xtb_folder, opt_sdf),
                     os.path.join(args.DFT_folder, opt_sdf))
-    dft_log = dft_scf(args.DFT_folder, opt_sdf, G16_PATH, args.DFT_theory, args.DFT_n_procs,
-                      logger)
+    qm_descriptor = dft_scf(args.DFT_folder, opt_sdf, G16_PATH, args.DFT_theory, args.DFT_n_procs,
+                            logger)
+    qm_descriptors.append(qm_descriptor)
+
+qm_descriptors = pd.DataFrame(qm_descriptors)
+qm_descriptors.to_pickle(args.output)
 
