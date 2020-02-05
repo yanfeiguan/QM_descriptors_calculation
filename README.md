@@ -63,6 +63,11 @@ submit.sh need to be replaced:
     $CONDA_PACKAGE_PATH: package path in your conda environment, e.g.: /home/yanfeig/miniconda3/envs/QM_descriptors/lib/python3.7/site-packages
     $G16ROOT: path to the G16 root
     $SCRATCH_FOLDER_G16: Scratch folder holding G16 calculation 
+    
+## Known limitations
+Allowed atom types currently are limited to the MMFF94 force field, which is used to search conformers for the 
+input molecules. Allowed atoms and ions are: C, H, N, O, F, Si, P, S, Cl, Br, I,
+ Fe+2, Fe+3, F-, Cl-, Br-, Li+, Na+, K+, Zn+2, Ca+2, Cu+1, Cu+2, and Mg+2
 
 ## Contributors
 Yanfei Guan, Duminda Ranasinghe, Oscar Wu
