@@ -17,5 +17,5 @@ GAUSS_SCRDIR=$SCRATCH_FOLDER_G16
 export g16root GAUSS_SCRDIR
 . $g16root/g16/bsd/g16.profile
 
-python main.py
+python main.py --ismiles test.csv
 
