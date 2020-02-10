@@ -68,16 +68,13 @@ if not os.path.isdir(args.xtb_folder):
 
 opt_sdfs = []
 for conf_sdf in conf_sdfs:
-    #try:
-    shutil.copyfile(os.path.join(args.MMFF_conf_folder, conf_sdf),
-                    os.path.join(args.xtb_folder, conf_sdf))
-    opt_sdf = xtb_optimization(args.xtb_folder, conf_sdf, XTB_PATH, logger)
-    opt_sdfs.append(opt_sdf)
-    #except Exception as e:
-    #    logger.error('XTB optimization for {} failed: {}'.format(os.path.splitext(conf_sdf)[0], e))
-    #else:
-    #    logger.info('XTB optimization for {} completed. '
-    #                'Structure saved in {}.'.format(os.path.splitext(conf_sdf)[0], args.MMFF_conf_folder))
+    try:
+        shutil.copyfile(os.path.join(args.MMFF_conf_folder, conf_sdf),
+                        os.path.join(args.xtb_folder, conf_sdf))
+        opt_sdf = xtb_optimization(args.xtb_folder, conf_sdf, XTB_PATH, logger)
+        opt_sdfs.append(opt_sdf)
+    except Exception as e:
+        logger.error('XTB optimization for {} failed: {}'.format(os.path.splitext(conf_sdf)[0], e))
 
 # G16 DFT calculation
 if not os.path.isdir(args.DFT_folder):
@@ -85,12 +82,14 @@ if not os.path.isdir(args.DFT_folder):
 
 qm_descriptors = []
 for opt_sdf in opt_sdfs:
-    #try:
-    shutil.copyfile(os.path.join(args.xtb_folder, opt_sdf),
-                    os.path.join(args.DFT_folder, opt_sdf))
-    qm_descriptor = dft_scf(args.DFT_folder, opt_sdf, G16_PATH, args.DFT_theory, args.DFT_n_procs,
-                            logger)
-    qm_descriptors.append(qm_descriptor)
+    try:
+        shutil.copyfile(os.path.join(args.xtb_folder, opt_sdf),
+                        os.path.join(args.DFT_folder, opt_sdf))
+        qm_descriptor = dft_scf(args.DFT_folder, opt_sdf, G16_PATH, args.DFT_theory, args.DFT_n_procs,
+                                logger)
+        qm_descriptors.append(qm_descriptor)
+    except Exception as e:
+        logger.error('Gaussian optimization for {} failed: {}'.format(os.path.splitext(opt_sdf)[0], e))
 
 qm_descriptors = pd.DataFrame(qm_descriptors)
 qm_descriptors.to_pickle(args.output)
