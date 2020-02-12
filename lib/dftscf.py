@@ -32,12 +32,12 @@ def dft_scf(folder, sdf, g16_path, level_of_theory, n_procs, logger):
             elif jobtype == 'plus1':
                 charge = 1
                 mult = 2
-                head = '%chk={}.chk\n%nprocshared=20\n# b3lyp/def2svp scf=(maxcycle=512, xqc) ' \
+                head = '%chk={}.chk\n%nprocshared={}\n# b3lyp/def2svp scf=(maxcycle=512, xqc) ' \
                        'pop=(full,mbs,hirshfeld,nbo6read)\n'.format(file_name, n_procs)
             elif jobtype == 'minus1':
                 charge = -1
                 mult = 2
-                head = '%chk={}.chk\n%nprocshared=20\n# b3lyp/def2svp scf=(maxcycle=512, xqc) ' \
+                head = '%chk={}.chk\n%nprocshared={}\n# b3lyp/def2svp scf=(maxcycle=512, xqc) ' \
                        'pop=(full,mbs,hirshfeld,nbo6read)\n'.format(file_name, n_procs)
 
 

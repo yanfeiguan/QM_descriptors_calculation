@@ -33,7 +33,7 @@ def xtb_optimization(folder, sdf, xtb_path, logger):
             os.remove('hessian')
             os.remove('vibspectrum')
 
-        log = XtbLog('{}_opt.sdf'.format(file_name))
+        log = XtbLog('{}_freq.log'.format(file_name))
     finally:
         os.chdir(pwd)
 
